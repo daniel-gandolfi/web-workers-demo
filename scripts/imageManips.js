@@ -1,9 +1,7 @@
  // Image manipulation logic from github.com/jwill/psychic-lana
 
-function manipulate(type, r, g, b, a) {
-  
-  var func = function() {};
-
+var manipulate;
+(function (){
   function makePixelInverted(r, g, b, a) {
     r = 255 - r;
     g = 255 - g;
@@ -41,23 +39,17 @@ function manipulate(type, r, g, b, a) {
     return [rs, gs, bs, a];
   };
 
-  switch (type) {
-    case "invert":
-      func = makePixelInverted;
-      break;
-    case "chroma":
-      func = makePixelChroma;
-      break;
-    case "greyscale":
-      func = makePixelGreyScale;
-      break;
-    case "vibrant":
-      func = makePixelVibrant;
-      break;
-    default:
+  var manipulateNameToManipulateFuncMap = {
+    "invert": makePixelInverted,
+    "chroma": makePixelChroma,
+    "greyscale": makePixelGreyScale,
+    "vibrant": makePixelVibrant
+  };
+  manipulate = function (type, r, g, b, a) { 
+    if (manipulateNameToManipulateFuncMap.hasOwnProperty(type)){
+      return manipulateNameToManipulateFuncMap[type](r, g, b, a);
+    } else {
       console.log("Not a valid image manipulation");
-      break;
+    }
   }
-
-  return func(r, g, b, a);
-}
+})();
